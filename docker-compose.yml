@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - mongo
+
+  file-service:
+    build: ./file-service
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./file-service/.env
+    depends_on:
+      - mongo
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "3002:3002"
+    env_file:
+      - ./gateway/.env
+    depends_on:
+      - auth-service
+      - file-service
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"

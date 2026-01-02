@@ -1,0 +1,23 @@
+# base image
+FROM node:20-alpine
+
+# set working dir
+WORKDIR /app
+
+# copy package.json + package-lock.json
+COPY package*.json ./
+
+# install dependencies
+RUN npm install
+
+# copy source
+COPY . .
+
+# build TypeScript
+RUN npm run build
+
+# expose port
+EXPOSE 3000
+
+# run server (production)
+CMD ["npm", "start"]
