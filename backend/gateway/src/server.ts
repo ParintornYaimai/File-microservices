@@ -3,6 +3,7 @@ import cors from '@fastify/cors'
 import { randomUUID } from 'node:crypto';
 import { authRoutes } from './interfaces/http/routes/authRoutes.js'
 import { buildAuthController } from './container.js';
+import { BaseError } from './application/errors/BaseError.js';
 
 
 export function createServer() {
@@ -14,7 +15,9 @@ export function createServer() {
         genReqId(req) {
             return (req.headers['request-id'] as string) ?? randomUUID();
         },
-        ignoreDuplicateSlashes: true,
+        routerOptions: {
+            ignoreDuplicateSlashes: true,
+        }
     });
 
     fastify.register(cors, {
@@ -26,12 +29,21 @@ export function createServer() {
         allowedHeaders: ['Content-Type', 'Authorization'],
     })
 
+    fastify.setErrorHandler((err, req, reply) => {
+        if (err instanceof BaseError) {
+            return reply.status(err.statusCode)
+                .send({ code: err.code, message: err.message })
+        }
+
+        return reply
+            .status(500)
+            .send({ code: 'INTERNAL_ERROR', message: 'Internal Server Error' });
+    })
+
     const authController = buildAuthController();
     fastify.register(async (app) => {
         await authRoutes(app, authController,)
     }, { prefix: '/auth' });
-
-    // fastify.register(fileRoutes);
 
 
     //health check
