@@ -1,11 +1,11 @@
 gateway/
 │
 ├─ src/
-│   ├─ interfaces/             # main layer ของ gateway
+│   ├─ interfaces/                 # Interface Adapters
 │   │   ├─ http/
 │   │   │   ├─ routes/
-│   │   │   │   ├─ authRoutes.ts
-│   │   │   │   ├─ fileRoutes.ts
+│   │   │   │   ├─ auth.routes.ts
+│   │   │   │   ├─ file.routes.ts
 │   │   │   │   └─ index.ts
 │   │   │   └─ controllers/
 │   │   │       ├─ AuthController.ts
@@ -15,17 +15,22 @@ gateway/
 │   │       ├─ clients/
 │   │       │   ├─ AuthGrpcClient.ts
 │   │       │   └─ FileGrpcClient.ts
-│   │       └─ proto/
-│   │           ├─ auth.proto
-│   │           └─ file.proto
 │   │
-│   ├─ use-cases/              # orchestrator logic (optional)
-│   │   └─ GatewayUseCases.ts
+│   ├─ application/                # Use cases / orchestration
+│   │   ├─ ports/                  # interfaces (สำคัญ!)
+│   │   │   ├─ AuthService.ts
+│   │   │   └─ FileService.ts
+│   │   └─ use-cases/
+│   │       ├─ AuthUseCase.ts
+│   │       └─ FileUseCase.ts
 │   │
-│   └─ shared/
-│       └─ utils/
-│           └─ logger.ts
+│   ├─ infrastructure/             # Frameworks & Drivers
+│   │   └─ grpc/
+│   │       ├─ AuthGrpcService.ts
+│   │       └─ FileGrpcService.ts
+│   │
+│   ├─ server.ts                   # fastify config
+│   └─ container.ts                #Composition Root (DI)
 │
-├─ package.json
-├─ tsconfig.json
-└─ index.ts
+├─ index.ts
+└─ package.json
