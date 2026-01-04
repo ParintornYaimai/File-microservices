@@ -3,11 +3,11 @@ import type { AuthService } from "../ports/AuthService.js";
 export class AuthUseCase {
     constructor(private authService: AuthService){}
 
-    login(data: any){
-        return this.authService.login(data);
+    async login(data: any){
+        return await this.authService.login(data);
     }
 
-    register(data: any){
-        return this.authService.register(data);
+    async register(data: any){
+        return await this.authService.register(data);
     }
 }
