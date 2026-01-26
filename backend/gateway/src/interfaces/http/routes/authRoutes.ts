@@ -7,4 +7,4 @@ export async function authRoutes(
 ) {
     fastify.post('/register', controllers.register);
     fastify.post('/login', controllers.login);
-}
+} 

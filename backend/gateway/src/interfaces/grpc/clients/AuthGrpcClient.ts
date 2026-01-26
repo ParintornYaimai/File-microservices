@@ -1,3 +1,4 @@
+import type { LoginDTO, LoginResponseDTO, RegisterDTO, RegisterResponseDTO } from '@//application/dtos/AuthDTO.js'
 import * as grpc from '@grpc/grpc-js'
 import * as protoLoader from '@grpc/proto-loader'
 import path from 'path'
@@ -30,7 +31,7 @@ export class AuthGrpcClient {
         )
     }
 
-    login(data: any): Promise<any> {
+    login(data: LoginDTO): Promise<LoginResponseDTO> {
         return new Promise((resolve, reject) => {
             this.client.Login(data, (err: any, res: any) => {
                 if (err) return reject(err)
@@ -39,7 +40,7 @@ export class AuthGrpcClient {
         })
     }
 
-    register(data: any): Promise<any> {
+    register(data: RegisterDTO): Promise<RegisterResponseDTO> {
         return new Promise((resolve, reject) => {
             this.client.Register(data, (err: any, res: any) => {
                 if (err) return reject(err)

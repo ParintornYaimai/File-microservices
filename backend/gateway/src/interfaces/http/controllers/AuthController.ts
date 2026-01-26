@@ -1,7 +1,7 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { AuthUseCase } from "@//application/use-cases/AuthService.js";
 import { AuthPresenter } from "../presenters/authPresenter.js";
-import { mapLoginRequest } from "../mappers/auth.mapper.js";
+import { mapLoginRequest, mapRegisterRequest} from "../mappers/auth.mapper.js";
 
 export class AuthController {
     constructor(private authUseCase: AuthUseCase){}
@@ -13,7 +13,8 @@ export class AuthController {
     };
 
     register = async(req: FastifyRequest, res: FastifyReply)=>{
-        const result = await this.authUseCase.register(req.body);
+        const registerDto = mapRegisterRequest(req);
+        const result = await this.authUseCase.register(registerDto);
         res.send(result);
     };
 }
