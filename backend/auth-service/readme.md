@@ -1,32 +1,74 @@
 auth-service/
-│
 ├─ src/
-│   ├─ domain/             # Business logic ของระบบ
-│   │   ├─ entities/       # ตัว object หลัก เช่น User.ts
-│   │   └─ value-objects/  # value objects เช่น Email.ts, Password.ts
-│   │
-│   ├─ use-cases/          # กฎธุรกิจของแต่ละ action
-│   │   ├─ RegisterUser.ts
-│   │   └─ LoginUser.ts
-│   │
-│   ├─ infrastructure/     # การเชื่อมต่อระบบภายนอก
-│   │   ├─ database/       # mongoose / postgres / mysql
-│   │   │   └─ UserRepository.ts
-│   │   ├─ grpc/           # grpc server/client
-│   │   │   ├─ proto/      # .proto files
-│   │   │   └─ AuthGrpcServer.ts
-│   │   └─ jwt/            # token management
-│   │
-│   ├─ interfaces/         # การ expose service ออกไป
-│   │   ├─ http/           # fastify route controllers
-│   │   │   ├─ AuthController.ts
-│   │   │   └─ routes.ts
-│   │   └─ grpc/           # grpc handlers (implement use-case)
-│   │
-│   └─ shared/             # shared logic/util
-│       └─ errors/
+│  ├─ domain/
+│  │  ├─ entities/
+│  │  │  └─ User.ts
+│  │  └─ value-objects/
+│  │     ├─ Email.ts
+│  │     └─ Password.ts
+│  │
+│  ├─ application/
+│  │  ├─ use-cases/
+│  │  │  ├─ RegisterUser.ts
+│  │  │  └─ LoginUser.ts
+│  │  ├─ ports/
+│  │  │  ├─ UserRepository.ts
+│  │  │  ├─ TokenService.ts
+│  │  │  └─ PasswordHasher.ts
+│  │  └─ dtos/
+│  │     ├─ Login.dto.ts
+│  │     └─ Register.dto.ts
+│  │
+│  ├─ infrastructure/
+│  │  ├─ database/
+│  │  │  ├─ mongoose/
+│  │  │  │  ├─ connection.ts
+│  │  │  │  └─ UserModel.ts
+│  │  │  └─ MongoUserRepository.ts
+│  │  │
+│  │  ├─ jwt/
+│  │  │  └─ JwtTokenService.ts
+│  │  │
+│  │  ├─ security/
+│  │  │  └─ BcryptPasswordHasher.ts
+│  │  │
+│  │  └─ grpc/
+│  │     ├─ proto/
+│  │     │  └─ auth.proto
+│  │     └─ AuthGrpcServer.ts
+│  │
+│  ├─ interfaces/
+│  │  ├─ http/
+│  │  │  ├─ server.ts
+│  │  │  ├─ routes.ts
+│  │  │  └─ AuthController.ts
+│  │  │
+│  │  └─ grpc/
+│  │     └─ AuthGrpcHandler.ts
+│  │
+│  ├─ shared/
+│  │  └─ errors/
+│  │     ├─ BaseError.ts
+│  │     ├─ ValidationError.ts
+│  │     ├─ UnauthorizedError.ts
+│  │     └─ NotFoundError.ts
+│  │
+│  ├─ container.ts
+│  └─ index.ts
 │
-├─ tests/                  # unit / integration tests
+├─ tests/
+│  ├─ unit/
+│  │  ├─ domain/
+│  │  │  └─ Email.test.ts
+│  │  └─ application/
+│  │     ├─ LoginUser.test.ts
+│  │     └─ RegisterUser.test.ts
+│  │
+│  └─ integration/
+│     └─ http.auth.test.ts
+│
+├─ .env.example
+├─ .gitignore
 ├─ package.json
 ├─ tsconfig.json
-└─ index.ts                # entry point
+└─ README.md
