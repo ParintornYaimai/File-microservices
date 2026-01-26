@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import cookie from '@fastify/cookie'
 import cors from '@fastify/cors'
 import { randomUUID } from 'node:crypto';
 import { authRoutes } from './interfaces/http/routes/authRoutes.js'
@@ -20,6 +21,7 @@ export function createServer() {
         }
     });
 
+    fastify.register(cookie)
     fastify.register(cors, {
         origin: [
             'http://localhost:3000',

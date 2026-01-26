@@ -6,15 +6,23 @@ import { mapLoginRequest, mapRegisterRequest} from "../mappers/auth.mapper.js";
 export class AuthController {
     constructor(private authUseCase: AuthUseCase){}
 
-    login = async(req: FastifyRequest, res: FastifyReply)=>{
+    login = async(req: FastifyRequest, reply: FastifyReply)=>{
         const dto = mapLoginRequest(req);
         const result = await this.authUseCase.login(dto);
-        res.send({ success: true, data: AuthPresenter.login(result) });
+        reply
+            .setCookie('accessToken', result.refreshToken, {
+                httpOnly: true,
+                secure: false, 
+                sameSite: 'lax',
+                path: '/',
+                maxAge: 30 * 60, 
+            })
+        .send({ success: true, data: AuthPresenter.login(result) });
     };
 
-    register = async(req: FastifyRequest, res: FastifyReply)=>{
+    register = async(req: FastifyRequest, reply: FastifyReply)=>{
         const registerDto = mapRegisterRequest(req);
-        const result = await this.authUseCase.register(registerDto);
-        res.send(result);
-    };
+        await this.authUseCase.register(registerDto);
+        reply.send({ success: true });
+    }
 }
